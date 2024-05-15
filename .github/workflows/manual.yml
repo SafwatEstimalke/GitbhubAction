@@ -26,8 +26,15 @@ jobs:
 
       - name: Build Debug build with Gradle
         run: ./gradlew build
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-apk
-          path: 'app/'
+
+      - name: Build Release APK
+        id: create_release
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Sign APK
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.KEY_STORE_64 }}
+          DECODED_KEYSTORE_PATH: ${{ secrets.KEY_STORE_PATH }}
+        run: |
+            echo $ENCODED_KEYSTORE > keystore_base64.txt
+            base64 -d keystore_base64.txt > DECODED_KEYSTORE_PATH
