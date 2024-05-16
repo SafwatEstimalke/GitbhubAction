@@ -47,7 +47,7 @@ jobs:
       - name: Build UnSigned Release APK
         run: |
             ./gradlew assembleDebug 
-            echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/release -name *.apk)" >> $GITHUB_ENV
+            echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/debug -name *.apk)" >> $GITHUB_ENV
 
       - name: Display APK Path
         run: | 
