@@ -34,14 +34,19 @@ jobs:
           encodedString: ${{ secrets.KEY_STORE_64 }}
 
 
-      - name: Build Signed Release APK
-        env:
-          RELEASE_KEYSTORE_PATH: ${{ github.workspace }}/releaseKeyStore.jks
-          RELEASE_SIGNING_PASSWORD: ${{ secrets.KEY_STORE_PASS }}
-          RELEASE_SIGNING_USERNAME: ${{ secrets.KEY_STORE_PASS }}
-          RELEASE_SIGNING_ALIAS: ${{ secrets.KEY_STORE_ALISE }}
+#      - name: Build Signed Release APK
+#        env:
+#          RELEASE_KEYSTORE_PATH: ${{ github.workspace }}/releaseKeyStore.jks
+#          RELEASE_SIGNING_PASSWORD: ${{ secrets.KEY_STORE_PASS }}
+#          RELEASE_SIGNING_USERNAME: ${{ secrets.KEY_STORE_PASS }}
+#          RELEASE_SIGNING_ALIAS: ${{ secrets.KEY_STORE_ALISE }}
+#        run: |
+#            ./gradlew assembleRelease --stacktrace | tee output.txt
+#            echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/release -name *.apk)" >> $GITHUB_ENV
+
+      - name: Build UnSigned Release APK
         run: |
-            ./gradlew assembleRelease --stacktrace | tee output.txt
+            ./gradlew assembleDebug --stacktrace | tee output.txt
             echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/release -name *.apk)" >> $GITHUB_ENV
 
       - name: Display APK Path
@@ -51,5 +56,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: signed_release
+          name: debug
           path: ${{ env.apk_path }}
