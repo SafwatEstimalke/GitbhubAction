@@ -24,9 +24,16 @@ jobs:
       - name: Gradlew permission
         run: chmod +x ./gradlew
 
+      - name: Decode keystore
+        uses: RollyPeres/base64-to-path@v1
+        with:
+          filePath: ${{ github.workspace }}/releaseKeyStore.jks
+          encodedString: ${{ secrets.KEY_STORE_64 }}
+
+
       - name: Build Signed Release APK
         env:
-          RELEASE_KEYSTORE_PATH: ${{ secrets.KEY_STORE_PATH }}
+          RELEASE_KEYSTORE_PATH: ${{ github.workspace }}/releaseKeyStore.jks
           RELEASE_SIGNING_PASSWORD: ${{ secrets.KEY_STORE_PASS }}
           RELEASE_SIGNING_USERNAME: ${{ secrets.KEY_STORE_PASS }}
           RELEASE_SIGNING_ALIAS: ${{ secrets.KEY_STORE_ALISE }}
