@@ -42,7 +42,7 @@ jobs:
 
       - name: Get APK file path
         id: apk-path
-        run: echo "path=$(find . -regex '^.*/build/outputs/bundle/.*\.apk$' -type f | head -1)" >> $GITHUB_OUTPUT
+        run: echo "path=$(find . -regex '^.*/build/outputs/bundle/.*\.apk$' -type f | head -1)"
 
 
       - name: Upload APK
