@@ -40,8 +40,13 @@ jobs:
         run:
           ./gradlew bundleRelease
 
+      - name: Get APK file path
+        id: apk-path
+        run: echo "path=$(find . -regex '^.*/build/outputs/bundle/.*\.apk$' -type f | head -1)" >> $GITHUB_OUTPUT
+
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: signed_release
-          path: app/signed_release.apk
+          path: ${{github.workspace}}/*.apk
