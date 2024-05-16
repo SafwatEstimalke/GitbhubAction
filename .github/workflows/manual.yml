@@ -40,5 +40,8 @@ jobs:
         run:
           ./gradlew bundleRelease
 
-      - name: Upload APK - ${{ env.repository_name }}
+      - name: Upload APK
         uses: actions/upload-artifact@v4
+        with:
+          name: signed_release
+          path: app/signed_release.apk
