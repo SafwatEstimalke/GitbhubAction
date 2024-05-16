@@ -40,13 +40,13 @@ jobs:
           RELEASE_SIGNING_PASSWORD: ${{ secrets.KEY_STORE_PASS }}
           RELEASE_SIGNING_USERNAME: ${{ secrets.KEY_STORE_PASS }}
           RELEASE_SIGNING_ALIAS: ${{ secrets.KEY_STORE_ALISE }}
+        run: |
+            ./gradlew assembleRelease --stacktrace | tee output.txt
+            echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/release -name *.apk)" >> $GITHUB_ENV
+
+      - name: Display APK Path
         run:
-          ./gradlew bundleRelease
-
-      - name: Get APK file path
-        id: apk-path
-        run: echo "path=$(find . -regex '^.*/build/outputs/bundle/.*\.apk$' -type f | head -1)"
-
+          echo "APK Path: ${{ env.apk_path }}"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
