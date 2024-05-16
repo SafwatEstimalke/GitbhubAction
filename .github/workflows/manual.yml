@@ -3,6 +3,9 @@ name: Manual Debug build
 
 #Events
 on:
+  push:
+    branch: main
+
   workflow_dispatch: #used to make this workflow run manually.
 
 jobs:
