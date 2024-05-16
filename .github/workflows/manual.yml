@@ -45,7 +45,7 @@ jobs:
             echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/release -name *.apk)" >> $GITHUB_ENV
 
       - name: Display APK Path
-        run:
+        run: | 
           echo "APK Path: ${{ env.apk_path }}"
 
       - name: Upload APK
