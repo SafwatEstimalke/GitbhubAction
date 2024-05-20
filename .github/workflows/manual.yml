@@ -27,27 +27,33 @@ jobs:
       - name: Gradlew permission
         run: chmod +x ./gradlew
 
-      - name: Decode keystore
-        uses: RollyPeres/base64-to-path@v1
-        with:
-          filePath: ${{ github.workspace }}/releaseKeyStore.jks
-          encodedString: ${{ secrets.KEY_STORE_64 }}
+#      - name: Decode keystore
+#        uses: RollyPeres/base64-to-path@v1
+#        with:
+#          filePath1: ${{ github.workspace }}/releaseKeyStore.jks
+#          encodedString: ${{ secrets.KEY_STORE_64 }}
 
-
-#      - name: Build Signed Release APK
-#        env:
-#          RELEASE_KEYSTORE_PATH: ${{ github.workspace }}/releaseKeyStore.jks
-#          RELEASE_SIGNING_PASSWORD: ${{ secrets.KEY_STORE_PASS }}
-#          RELEASE_SIGNING_USERNAME: ${{ secrets.KEY_STORE_PASS }}
-#          RELEASE_SIGNING_ALIAS: ${{ secrets.KEY_STORE_ALISE }}
-#        run: |
-#            ./gradlew assembleRelease --stacktrace | tee output.txt
-#            echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/release -name *.apk)" >> $GITHUB_ENV
-
-      - name: Build UnSigned Release APK
+      - name: Decode Keystore manually
+        env:
+         ANDROID_KEYSTORE_BASE64: ${{ secrets.KEY_STORE_64 }}
         run: |
-            ./gradlew assembleDebug 
-            echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/debug -name *.apk)" >> $GITHUB_ENV
+          echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > my-release-key.jks
+      
+
+      - name: Build Signed Release APK
+        env:
+          RELEASE_KEYSTORE_PATH: ${{ github.workspace }}/my-release-key.jks
+          RELEASE_SIGNING_PASSWORD: ${{ secrets.KEY_STORE_PASS }}
+          RELEASE_SIGNING_USERNAME: ${{ secrets.KEY_STORE_PASS }}
+          RELEASE_SIGNING_ALIAS: ${{ secrets.KEY_STORE_ALISE }}
+        run: |
+            ./gradlew assembleRelease --stacktrace
+            echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/release -name *.apk)" >> $GITHUB_ENV
+
+#      - name: Build UnSigned Release APK
+#        run: |
+#            ./gradlew assembleDebug
+#            echo "apk_path=$(find ${{ github.workspace }}/app/build/outputs/apk/debug -name *.apk)" >> $GITHUB_ENV
 
       - name: Display APK Path
         run: | 
@@ -56,5 +62,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: debug
+          name: signed_apk
           path: ${{ env.apk_path }}
